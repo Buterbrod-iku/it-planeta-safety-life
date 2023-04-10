@@ -1,0 +1,7 @@
+{
+    "mapPath": "",
+    "outputPath" : "",
+    "chunkSize": 64,
+    "realMapHeight": 200,
+    "rangeBetweenPointsInPixels": 6
+}
