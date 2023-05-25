@@ -269,9 +269,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val lastLocation = fusedLocationProviderClient.lastLocation
 
         lastLocation.addOnSuccessListener {
-            val address = geocoder.getFromLocation(it.latitude, it.longitude, 1)
-            val text = findViewById<TextView>(R.id.sityText)
-            text.text = address?.get(0)?.locality ?: "0"
+            try{
+                val address = geocoder.getFromLocation(it.latitude, it.longitude, 1)
+                val text = findViewById<TextView>(R.id.sityText)
+                text.text = address?.get(0)?.locality ?: "0"
+            }catch (e: Exception ){
+                Toast.makeText(this, "Включите геолокацию и интернет", Toast.LENGTH_LONG).show()
+            }
         }
     }
 
