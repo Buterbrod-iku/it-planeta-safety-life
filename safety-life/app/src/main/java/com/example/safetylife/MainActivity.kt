@@ -262,33 +262,31 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
 
     private fun getLoaction(){
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACTIVITY_RECOGNITION), 10101)
-        }
 
-        val lastLocation = fusedLocationProviderClient.lastLocation
-
-        lastLocation.addOnSuccessListener {
-            try{
-                val address = geocoder.getFromLocation(it.latitude, it.longitude, 1)
-                val text = findViewById<TextView>(R.id.sityText)
-                text.text = address?.get(0)?.locality ?: "0"
-            }catch (e: Exception ){
-                Toast.makeText(this, "Включите геолокацию и интернет", Toast.LENGTH_LONG).show()
-            }
-        }
+    if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACTIVITY_RECOGNITION), 10101)
     }
 
-    fun createChannel(id: String, name: String) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(id, name,
-                NotificationManager.IMPORTANCE_HIGH
+    val lastLocation = fusedLocationProviderClient.lastLocation
+    val text = findViewById<TextView>(R.id.sityText)
+    lastLocation.addOnSuccessListener {
+        try{
+            val address = geocoder.getFromLocation(it.latitude, it.longitude, 1)
+            text.text = address?.get(0)?.locality ?: "0"
+        }catch (e: Exception ){
+            Toast.makeText(this, "Включите геолокацию и интернет", Toast.LENGTH_LONG).show()
+            Handler(Looper.getMainLooper()).postDelayed(
+                {
+                    getLoaction()// This method will be executed once the timer is over
+                },
+                4000 // value in milliseconds
             )
-            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
+            //метод каждые n секунд пытаться установить город
         }
 
+
     }
+}
 
     fun createLocationRequest(): LocationRequest {
         val locationRequest = LocationRequest.create().apply {
