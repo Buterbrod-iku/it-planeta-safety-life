@@ -114,7 +114,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
         }
         a.setOnClickListener {
-            active()
+            val text = findViewById<TextView>(R.id.sityText)
+            if(text.text != "None")active()
         }
 
         //для компаса
